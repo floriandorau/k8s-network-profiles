@@ -16,6 +16,9 @@ spec:
       labels:
         app: httbin-poller
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
       containers:
         - image: busybox
           name: busybox
@@ -50,6 +53,9 @@ spec:
       labels:
         app: nginx-poller
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
       containers:
         - image: busybox
           name: busybox
