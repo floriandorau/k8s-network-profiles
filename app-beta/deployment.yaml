@@ -1,0 +1,72 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: beta-nginx
+  name: beta-nginx
+  namespace: beta
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: beta-nginx
+  template:
+    metadata:
+      labels:
+        app: beta-nginx
+    spec:
+      containers:
+        - image: nginx
+          name: nginx
+          ports:
+            - containerPort: 80
+              name: nginx-port
+          resources:
+            requests:
+              memory: 100Mi
+              cpu: 100m
+            limits:
+              memory: 200Mi
+              cpu: 100m
+          volumeMounts:
+            - name: nginx-index-file
+              mountPath: /usr/share/nginx/html/
+      volumes:
+        - name: nginx-index-file
+          configMap:
+            name: cm-nginx-index
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: beta-busybox
+  name: beta-busybox
+  namespace: beta
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: beta-busybox
+  template:
+    metadata:
+      labels:
+        app: beta-busybox
+    spec:
+      containers:
+        - image: busybox
+          name: busybox
+          command:
+            [
+              "/bin/sh",
+              "-c",
+              "while true; do sleep 10; wget -qO- 'http://beta-nginx.beta.svc.cluster.local:80'; done",
+            ]
+          resources:
+            requests:
+              memory: 100Mi
+              cpu: 100m
+            limits:
+              memory: 200Mi
+              cpu: 100m
