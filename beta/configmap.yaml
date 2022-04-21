@@ -5,13 +5,13 @@ metadata:
   namespace: beta
 data:
   index.html: |
-    <!DOCTYPE html>    
+    <!DOCTYPE html>
     <html lang="en">
       <head>
-        <meta charset="UTF-8">
+        <meta charset="UTF-8" />
         <title>App - Beta</title>
       </head>
       <body>
-        <p>Hello World from Beta app.</p>
+        <p>Hello World from Beta Nginx.</p>
       </body>
     </html>

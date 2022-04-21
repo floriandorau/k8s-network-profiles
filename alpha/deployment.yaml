@@ -3,18 +3,18 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: poll-httbin
-  name: poll-httbin
+    app: httbin-poller
+  name: httbin-poller
   namespace: alpha
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: poll-httbin
+      app: httbin-poller
   template:
     metadata:
       labels:
-        app: poll-httbin
+        app: httbin-poller
     spec:
       containers:
         - image: busybox
@@ -23,7 +23,7 @@ spec:
             [
               "/bin/sh",
               "-c",
-              "while true; do sleep 30; wget -qO- 'https://httpbin.org/uuid'; done",
+              "while true; do sleep 30; date; wget -qO- 'https://httpbin.org/uuid'; done",
             ]
           resources:
             requests:
@@ -37,18 +37,18 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: poll-nginx
-  name: poll-nginx
+    app: nginx-poller
+  name: nginx-poller
   namespace: alpha
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: poll-nginx
+      app: nginx-poller
   template:
     metadata:
       labels:
-        app: poll-nginx
+        app: nginx-poller
     spec:
       containers:
         - image: busybox
@@ -57,7 +57,7 @@ spec:
             [
               "/bin/sh",
               "-c",
-              "while true; do sleep 30; wget -qO- 'http://beta-nginx.beta.svc.cluster.local:80'; done",
+              "while true; do sleep 30; date; wget -qO- --timeout=5 'http://beta-nginx.beta.svc.cluster.local:80'; done",
             ]
           resources:
             requests:

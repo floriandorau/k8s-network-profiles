@@ -11,13 +11,22 @@ flowchart BT
     subgraph internet
         httpbin
     end
-    subgraph alpha
-        alpha-busybox-- GET /uuid every 30s -->httpbin
-    end
-    subgraph beta
-        alpha-busybox-- GET /index every 30s -->beta-nginx
-        beta-busybox-- GET /index every 30s -->beta-nginx
+    subgraph Cluster
+        direction TB
+        subgraph Namespace alpha
+            direction TB
+            id1(httpbin-poller)-- GET /uuid every 30s -->httpbin
+            id2(nginx-poller)
+        end
+        subgraph Namespace beta
+            id2(nginx-poller)-- GET /index every 30s -->id4(nginx)
+            id3(nginx-poller)-- GET /index every 30s -->id4(nginx)
+        end
     end
 ```
 
 Deployments are split into to two namespaces: `alpha` and `beta`.
+
+## Network Policy Editor
+
+https://editor.cilium.io/

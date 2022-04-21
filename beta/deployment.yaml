@@ -3,18 +3,18 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: beta-nginx
-  name: beta-nginx
+    app: nginx
+  name: nginx
   namespace: beta
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: beta-nginx
+      app: nginx
   template:
     metadata:
       labels:
-        app: beta-nginx
+        app: nginx
     spec:
       containers:
         - image: nginx
@@ -41,18 +41,18 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: beta-busybox
-  name: beta-busybox
+    app: poll-nginx
+  name: poll-nginx
   namespace: beta
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: beta-busybox
+      app: nginx-poller
   template:
     metadata:
       labels:
-        app: beta-busybox
+        app: nginx-poller
     spec:
       containers:
         - image: busybox
@@ -61,7 +61,7 @@ spec:
             [
               "/bin/sh",
               "-c",
-              "while true; do sleep 30; wget -qO- 'http://beta-nginx.beta.svc.cluster.local:80'; done",
+              "while true; do sleep 30; date; wget -qO- --timeout=5 'http://beta-nginx.beta.svc.cluster.local:80'; done",
             ]
           resources:
             requests:
