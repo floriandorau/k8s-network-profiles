@@ -57,7 +57,7 @@ spec:
             [
               "/bin/sh",
               "-c",
-              "while true; do sleep 30; date; wget -qO- --timeout=5 'http://beta-nginx.beta.svc.cluster.local:80'; done",
+              "while true; do sleep 30; date; wget -qO- --timeout=5 'http://nginx.beta.svc.cluster.local:80'; done",
             ]
           resources:
             requests:
