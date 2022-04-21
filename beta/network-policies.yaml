@@ -1,0 +1,29 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: beta-network-policy
+  namespace: beta
+spec:
+  podSelector: {} # Deny all ingress and egress by default for any pod
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from: # Allow ingress from pods of same namespace
+        - podSelector: {}
+    - from: # Allow ingress from pods of namespace alpha
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: alpha
+  egress:
+    - to: # Allow egress to pods of same namespace only
+        - podSelector: {}
+    - to:
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - port: 53
+          protocol: UDP
