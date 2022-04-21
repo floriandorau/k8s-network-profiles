@@ -11,10 +11,8 @@ flowchart BT
     subgraph internet
         httpbin
     end
-    subgraph Cluster
-        direction TB
-        subgraph Namespace alpha
-            direction TB
+    subgraph Cluster        
+        subgraph Namespace alpha            
             id1(httpbin-poller)-- GET /uuid every 30s -->httpbin
             id2(nginx-poller)
         end
@@ -25,8 +23,8 @@ flowchart BT
     end
 ```
 
-Deployments are split into to two namespaces: `alpha` and `beta`.
+Deployments are splitted into to two namespaces: `alpha` and `beta`.
 
 ## Network Policy Editor
 
-https://editor.cilium.io/
+To create Network Polices easily, you can use the following online editor: <https://editor.cilium.io/>.
