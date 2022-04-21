@@ -1,14 +1,16 @@
 # k8s-network-profiles
 
-Simple deploymnet for testing Kuberenets Network policies.
+Simple deployment for testing Kubernetes Network policies.
 
 ## Setup
 
 ```mermaid
-flowchart TD
-    alpha-busybox-- GET /uuid every 30s -->httpbin
+flowchart BT
+    subgraph internet
+        httpbin
+    end
     subgraph alpha
-        alpha-busybox
+        alpha-busybox-- GET /uuid every 30s -->httpbin
     end
     subgraph beta
         alpha-busybox-- GET /index every 30s -->beta-nginx
