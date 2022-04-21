@@ -19,7 +19,7 @@ spec:
   egress:
     - to: # Allow egress to pods of same namespace only
         - podSelector: {}
-    - to:
+    - to: # Allow DNS resolution
         - namespaceSelector: {}
           podSelector:
             matchLabels:
