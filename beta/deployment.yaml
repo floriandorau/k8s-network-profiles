@@ -61,7 +61,7 @@ spec:
             [
               "/bin/sh",
               "-c",
-              "while true; do sleep 10; wget -qO- 'http://beta-nginx.beta.svc.cluster.local:80'; done",
+              "while true; do sleep 30; wget -qO- 'http://beta-nginx.beta.svc.cluster.local:80'; done",
             ]
           resources:
             requests:

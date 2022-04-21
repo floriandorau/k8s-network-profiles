@@ -1,0 +1,68 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: poll-httbin
+  name: poll-httbin
+  namespace: alpha
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: poll-httbin
+  template:
+    metadata:
+      labels:
+        app: poll-httbin
+    spec:
+      containers:
+        - image: busybox
+          name: busybox
+          command:
+            [
+              "/bin/sh",
+              "-c",
+              "while true; do sleep 30; wget -qO- 'https://httpbin.org/uuid'; done",
+            ]
+          resources:
+            requests:
+              memory: 100Mi
+              cpu: 20m
+            limits:
+              memory: 200Mi
+              cpu: 100m
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: poll-nginx
+  name: poll-nginx
+  namespace: alpha
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: poll-nginx
+  template:
+    metadata:
+      labels:
+        app: poll-nginx
+    spec:
+      containers:
+        - image: busybox
+          name: busybox
+          command:
+            [
+              "/bin/sh",
+              "-c",
+              "while true; do sleep 30; wget -qO- 'http://beta-nginx.beta.svc.cluster.local:80'; done",
+            ]
+          resources:
+            requests:
+              memory: 100Mi
+              cpu: 20m
+            limits:
+              memory: 200Mi
+              cpu: 100m
