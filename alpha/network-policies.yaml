@@ -10,7 +10,7 @@ spec:
     - Ingress
     - Egress
   egress:
-    - to: # Allow egress to nginx pod ofnamespace beta
+    - to: # Allow ingress to nginx pod ofnamespace beta
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: beta
@@ -38,3 +38,7 @@ spec:
       ports:
         - port: 53
           protocol: UDP
+    - to:
+      ports:
+        - port: 3306
+          protocol: TCP
