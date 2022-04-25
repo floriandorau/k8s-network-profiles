@@ -5,19 +5,25 @@ metadata:
   name: alpha-network-policy
   namespace: alpha
 spec:
-  podSelector: {} # Deny all ingress and egress by default for any pod
+  # Deny all ingress by default for any pod
+  podSelector: {}
   policyTypes:
     - Ingress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: httpbin-poller-network-policy
+  namespace: alpha
+spec:
+  podSelector:
+    matchLabels:
+      app: httpbin-poller
+  policyTypes:
     - Egress
   egress:
-    - to: # Allow ingress to nginx pod ofnamespace beta
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: beta
-          podSelector:
-            matchLabels:
-              app: nginx
-    - to: # Allow egress to httpbin.org
+    # Allow egress to httpbin.org
+    - to:
         - ipBlock:
             cidr: 52.7.224.181/32
         - ipBlock:
@@ -30,7 +36,11 @@ spec:
             cidr: 3.226.124.170/32
         - ipBlock:
             cidr: 3.231.0.150/32
-    - to: # Allow DNS resolution
+      ports:
+        - port: 80
+          protocol: TCP
+    # Allow DNS resolution
+    - to:
         - namespaceSelector: {}
           podSelector:
             matchLabels:
@@ -38,7 +48,63 @@ spec:
       ports:
         - port: 53
           protocol: UDP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: nginx-poller-network-policy
+  namespace: alpha
+spec:
+  podSelector:
+    matchLabels:
+      app: nginx-poller
+  policyTypes:
+    - Egress
+  egress:
+    # Allow egress to nginx pod of namespace beta
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: beta
+          podSelector:
+            matchLabels:
+              app: nginx
+      ports:
+        - port: 80
+          protocol: TCP
+    # Allow DNS resolution
+    - to:
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - port: 53
+          protocol: UDP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: mysql-poller-network-policy
+  namespace: alpha
+spec:
+  podSelector:
+    matchLabels:
+      app: mysql-poller
+  policyTypes:
+    - Egress
+  egress:
+    # Allow egress to MySQL db
     - to:
       ports:
         - port: 3306
           protocol: TCP
+    # Allow DNS resolution
+    - to:
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - port: 53
+          protocol: UDP
